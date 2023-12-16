@@ -1,0 +1,102 @@
+CREATE DATABASE EXAMENENCUESTA
+
+GO
+ 
+USE examenencuesta
+
+GO
+ 
+CREATE TABLE PARTIDOS
+
+(
+
+	IDPartido INT PRIMARY KEY IDENTITY(1,1),
+
+	NombrePP VARCHAR(15)
+
+)
+
+GO
+ 
+CREATE TABLE ENCUESTA
+
+(
+
+	NumEnc INT PRIMARY KEY IDENTITY(1,1),
+
+	NombrePar VARCHAR(50),
+
+	Edad INT,
+
+	CorreoE VARCHAR(50),
+
+	PartidoPol INT,
+
+	CONSTRAINT fk_partido FOREIGN KEY (PartidoPol) REFERENCES PARTIDOS(IDPartido)
+
+)
+
+GO
+ 
+INSERT INTO PARTIDOS(NombrePP)
+
+VALUES 
+
+('PLN'), ('PAC'), ('PUSC')
+
+GO
+ 
+CREATE PROCEDURE AGREGAR_ENCUESTA
+
+@NOMBRE VARCHAR(50),
+
+@EDAD INT,
+
+@CORREOE VARCHAR(50),
+
+@PARTIDOPOL INT
+
+AS
+
+	BEGIN
+
+		INSERT INTO ENCUESTA(NombrePar, Edad, CorreoE, PartidoPol)
+
+		VALUES(@NOMBRE, @EDAD, @CORREOE, @PARTIDOPOL)
+
+	END
+
+GO
+ 
+CREATE PROCEDURE CONSULTAR_TODOS_ENCUESTA
+
+AS
+
+	BEGIN
+
+		SELECT ENCUESTA.NumEnc, ENCUESTA.NombrePar as Nombre, ENCUESTA.Edad as Edad, ENCUESTA.CorreoE as Correo, PARTIDOS.NombrePP as Partido
+
+		FROM ENCUESTA
+
+		INNER JOIN PARTIDOS ON ENCUESTA.PartidoPol = PARTIDOS.IDPartido
+
+	END
+
+GO
+ 
+CREATE PROCEDURE CONSULTAR_PARTIDOS
+
+AS
+
+	BEGIN
+
+		SELECT CONVERT (VARCHAR (15),IDPartido) + NombrePP AS NombrePar, IDPartido
+		
+		FROM PARTIDOS
+
+	END
+
+	INSERT INTO ENCUESTA VALUES 
+		('Carlos', '35', 'carlos@gmail.com', '1'),
+		('Daniela', '20', 'dani@gmail.com','2' ),
+		('Ricardo', '18', 'richard@hotmail.com','3' )
